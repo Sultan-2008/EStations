@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Station Locator</title>
+    <style>
+        #search-form {
+            margin-bottom: 20px;
+        }
+
+        #search-input {
+            padding: 8px;
+            width: 200px;
+        }
+
+        #search-btn {
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        #suggestions {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #suggestions li {
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #suggestions li:last-child {
+            border-bottom: none;
+        }
+
+        #suggestions li:hover {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-form">
+        <input type="text" id="search-input" placeholder="Enter station name...">
+        <button id="search-btn">Search</button>
+    </div>
+
+    <ul id="suggestions"></ul>
+
+    <script>
+        // Station names
+        const stations = [
+            "Electric Vehicle Charging Station, G1,Brindawan Park, Hotgi Rd, Hoti Road, Solapur, Maharashtra 413003",
+            "E-Fill Charging Station, Hotel Chandrabal, Solapur - Pune Hwy, Kondi, Maharashtra 413255",
+            "Electric Vehicle Charging Station, Anjali Bunglow, Bank Colony, Dnyaneshwar Nagar, Rohini Nagar, Jule, Solapur, Maharashtra 413008",
+            "Ather Grid Charging Station, Chavan Trading Company, VIP Rd, Railway lines, Sidheshwar Peth, Solapur, Maharashtra 413002",
+            "goEgo Charging Station, Aashray, near Indian Model School, Bank Colony, Dnyaneshwar Nagar, Model Colony, Jule, Solapur, Maharashtra 413008",
+            "Ather Space - Electric Scooter Experience Center, No.13, Hotgi Rd, Industrial Estate, Sainath Nagar, Solapur, Maharashtra 413003",
+            "Electric Vehicle Charging Station, 99, Malinagar, Maharashtra 413006"
+        ];
+
+        const searchInput = document.getElementById('search-input');
+        const suggestionsList = document.getElementById('suggestions');
+
+        // Function to filter station names based on input
+        function filterStations(input) {
+            return stations.filter(station => station.toLowerCase().includes(input.toLowerCase()));
+        }
+
+        // Function to display suggestions
+        function displaySuggestions(suggestions) {
+            suggestionsList.innerHTML = '';
+            suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+        }
+
+        // Event listener for input in search box
+        searchInput.addEventListener('input', function() {
+            const input = this.value.trim();
+            const filteredStations = filterStations(input);
+            displaySuggestions(filteredStations);
+        });
+
+        // Event listener for click on suggestions
+        suggestionsList.addEventListener('click', function(event) {
+            if (event.target.tagName === 'LI') {
+                searchInput.value = event.target.textContent;
+                suggestionsList.innerHTML = '';
+            }
+        });
+        document.getElementById("search-btn").addEventListener("click", function() {
+            const input = document.getElementById("search-input").value;
+            const searchQuery = encodeURIComponent(input);
+            const googleMapsURL = `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
+            window.location.href = googleMapsURL;
+        });
+    </script>
+</body>
+</html>
